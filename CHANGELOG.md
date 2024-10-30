@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.5] - 2024-10-30
+
 ## [2.5.2] - 2024-09-19
 
 ### Changed
@@ -156,7 +158,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Detailed README file with example of usage and env var description
 - Github actions to build and push docker image
 
-[unreleased]: https://github.com/joesturge/lazymc-docker-proxy/compare/v2.5.2...HEAD
+[unreleased]: https://github.com/taukakao/lazymc-docker-proxy/compare/v1.1.5...HEAD
+[1.1.5]: https://github.com/taukakao/lazymc-docker-proxy/compare/v2.5.2...v1.1.5
 [2.5.2]: https://github.com/joesturge/lazymc-docker-proxy/compare/v2.5.1...v2.5.2
 [2.5.1]: https://github.com/joesturge/lazymc-docker-proxy/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/joesturge/lazymc-docker-proxy/compare/v2.4.0...v2.5.0
