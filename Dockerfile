@@ -1,6 +1,6 @@
 # determine the architecture
-ARG TARGETARCH
-ARG RUST_ARCH_AMD=${TARGETARCH/amd64/x86_64-unknown-linux-musl}
+ARG TARGETPLATFORM
+ARG RUST_ARCH_AMD=${TARGETPLATFORM/amd64/x86_64-unknown-linux-musl}
 ARG RUST_ARCH=${RUST_ARCH_AMD/arm64/aarch64-unknown-linux-musl}
 
 # setup lazymc versions
@@ -9,7 +9,7 @@ ARG LAZYMC_LEGACY_VERSION=0.2.10
 
 # build lazymc
 FROM rust:1.82 as lazymc-builder
-ARG TARGETARCH
+ARG TARGETPLATFORM
 ARG RUST_ARCH
 RUN echo $RUST_ARCH $TARGETARCH
 RUN rustup target add $RUST_ARCH
