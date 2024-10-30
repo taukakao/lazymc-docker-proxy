@@ -24,7 +24,8 @@ FROM rust:1.82 as lazymc-legacy-builder
 ARG TARGETARCH
 ARG RUST_ARCH_AMD=${TARGETARCH/amd64/x86_64-unknown-linux-musl}
 ARG RUST_ARCH=${RUST_ARCH_AMD/arm64/aarch64-unknown-linux-musl}
-RUN echo $RUST_ARCH $TARGETARCHRUN rustup target add $RUST_ARCH
+RUN echo $RUST_ARCH $TARGETARCH
+RUN rustup target add $RUST_ARCH
 RUN apt update && apt install -y musl-tools musl-dev
 RUN update-ca-certificates
 RUN apt-get update && apt-get install -y pkg-config libssl-dev
