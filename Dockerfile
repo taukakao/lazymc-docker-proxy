@@ -1,8 +1,3 @@
-# determine the architecture
-ARG TARGETPLATFORM
-ARG RUST_ARCH_AMD=${TARGETPLATFORM/amd64/x86_64-unknown-linux-musl}
-ARG RUST_ARCH=${RUST_ARCH_AMD/arm64/aarch64-unknown-linux-musl}
-
 # setup lazymc versions
 ARG LAZYMC_VERSION=0.2.11
 ARG LAZYMC_LEGACY_VERSION=0.2.10
@@ -10,9 +5,9 @@ ARG LAZYMC_LEGACY_VERSION=0.2.10
 # build lazymc
 FROM rust:1.82 as lazymc-builder
 ARG TARGETPLATFORM
-ARG RUST_ARCH
-ARG BUILDPLATFORM
-RUN echo $RUST_ARCH $TARGETPLATFORM $BUILDPLATFORM
+ARG RUST_ARCH_AMD=${TARGETPLATFORM/amd64/x86_64-unknown-linux-musl}
+ARG RUST_ARCH=${RUST_ARCH_AMD/arm64/aarch64-unknown-linux-musl}
+RUN echo $RUST_ARCH $TARGETPLATFORM
 RUN rustup target add $RUST_ARCH
 RUN apt update && apt install -y musl-tools musl-dev
 RUN update-ca-certificates
@@ -26,9 +21,10 @@ RUN mv /usr/src/lazymc/target/$RUST_ARCH /usr/src/lazymc/target/output_final
 
 # build lazymc-legacy
 FROM rust:1.82 as lazymc-legacy-builder
-ARG RUST_ARCH
-RUN echo $RUST_ARCH
-RUN rustup target add $RUST_ARCH
+ARG TARGETPLATFORM
+ARG RUST_ARCH_AMD=${TARGETPLATFORM/amd64/x86_64-unknown-linux-musl}
+ARG RUST_ARCH=${RUST_ARCH_AMD/arm64/aarch64-unknown-linux-musl}
+RUN echo $RUST_ARCH $TARGETPLATFORMRUN rustup target add $RUST_ARCH
 RUN apt update && apt install -y musl-tools musl-dev
 RUN update-ca-certificates
 RUN apt-get update && apt-get install -y pkg-config libssl-dev
@@ -41,8 +37,10 @@ RUN mv /usr/src/lazymc/target/$RUST_ARCH /usr/src/lazymc/target/output_final
 
 # build this app
 FROM rust:1.82 as app-builder
-ARG RUST_ARCH
-RUN echo $RUST_ARCH
+ARG TARGETPLATFORM
+ARG RUST_ARCH_AMD=${TARGETPLATFORM/amd64/x86_64-unknown-linux-musl}
+ARG RUST_ARCH=${RUST_ARCH_AMD/arm64/aarch64-unknown-linux-musl}
+RUN echo $RUST_ARCH $TARGETPLATFORM
 RUN rustup target add $RUST_ARCH
 RUN apt update && apt install -y musl-tools musl-dev
 RUN update-ca-certificates
