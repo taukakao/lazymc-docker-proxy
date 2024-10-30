@@ -1,5 +1,7 @@
-# get the architecture
+# determine the architecture
 ARG TARGETARCH
+ARG RUST_ARCH_AMD=${TARGETARCH/amd64/x86_64-unknown-linux-musl}
+ARG RUST_ARCH=${RUST_ARCH_AMD/arm64/aarch64-unknown-linux-musl}
 
 # setup lazymc versions
 ARG LAZYMC_VERSION=0.2.11
@@ -7,11 +9,6 @@ ARG LAZYMC_LEGACY_VERSION=0.2.10
 
 # build lazymc
 FROM rust:1.82 as lazymc-builder
-RUN if [ "$TARGETARCH" = "amd64" ]; then \
-        export RUST_ARCH=x86_64-unknown-linux-musl ; \
-    elif [ "$TARGETARCH" = "arm64" ]; then \
-        export RUST_ARCH=aarch64-unknown-linux-musl ; \
-    fi
 RUN echo $RUST_ARCH
 RUN rustup target add $RUST_ARCH
 RUN apt update && apt install -y musl-tools musl-dev
@@ -26,11 +23,6 @@ RUN mv /usr/src/lazymc/target/$RUST_ARCH /usr/src/lazymc/target/output_final
 
 # build lazymc-legacy
 FROM rust:1.82 as lazymc-legacy-builder
-RUN if [ "$TARGETARCH" = "amd64" ]; then \
-        export RUST_ARCH=x86_64-unknown-linux-musl ; \
-    elif [ "$TARGETARCH" = "arm64" ]; then \
-        export RUST_ARCH=aarch64-unknown-linux-musl ; \
-    fi
 RUN echo $RUST_ARCH
 RUN rustup target add $RUST_ARCH
 RUN apt update && apt install -y musl-tools musl-dev
@@ -45,11 +37,6 @@ RUN mv /usr/src/lazymc/target/$RUST_ARCH /usr/src/lazymc/target/output_final
 
 # build this app
 FROM rust:1.82 as app-builder
-RUN if [ "$TARGETARCH" = "amd64" ]; then \
-        export RUST_ARCH=x86_64-unknown-linux-musl ; \
-    elif [ "$TARGETARCH" = "arm64" ]; then \
-        export RUST_ARCH=aarch64-unknown-linux-musl ; \
-    fi
 RUN echo $RUST_ARCH
 RUN rustup target add $RUST_ARCH
 RUN apt update && apt install -y musl-tools musl-dev
