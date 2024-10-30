@@ -11,7 +11,8 @@ ARG LAZYMC_LEGACY_VERSION=0.2.10
 FROM rust:1.82 as lazymc-builder
 ARG TARGETPLATFORM
 ARG RUST_ARCH
-RUN echo $RUST_ARCH $TARGETARCH
+ARG BUILDPLATFORM
+RUN echo $RUST_ARCH $TARGETPLATFORM $BUILDPLATFORM
 RUN rustup target add $RUST_ARCH
 RUN apt update && apt install -y musl-tools musl-dev
 RUN update-ca-certificates
