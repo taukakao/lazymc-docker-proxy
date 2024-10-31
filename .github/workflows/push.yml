@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - main
+      - try_less_emulation
   pull_request:
 env:
   REGISTRY: ghcr.io
@@ -11,6 +12,26 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
+  build:
+    name: Build without pushing
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: docker
+        uses: ./.github/actions/docker
+        with:
+          publish: false
+          
   find-tests:
     name: Find Tests
     runs-on: ubuntu-latest
