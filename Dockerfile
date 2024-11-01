@@ -3,7 +3,7 @@ ARG LAZYMC_VERSION=0.2.11
 ARG LAZYMC_LEGACY_VERSION=0.2.10
 
 # build lazymc
-FROM rust:1.82 as lazymc-builder
+FROM --platform=$BUILDPLATFORM rust:1.82 as lazymc-builder
 ARG TARGETARCH
 ARG RUST_ARCH_AMD=${TARGETARCH/amd64/x86_64-unknown-linux-musl}
 ARG RUST_ARCH=${RUST_ARCH_AMD/arm64/aarch64-unknown-linux-musl}
@@ -12,11 +12,21 @@ RUN rustup target add $RUST_ARCH
 RUN apt update && apt install -y musl-tools musl-dev
 RUN update-ca-certificates
 RUN apt-get update && apt-get install -y pkg-config libssl-dev
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+RUN <<EOF
+if ! [ "$TARGETPLATFORM" = "$BUILDPLATFORM" ]; then
+  cargo install cross --git https://github.com/cross-rs/cross
+  echo cross > /tmp/lazymc-build-command
+else
+  echo cargo > /tmp/lazymc-build-command
+fi
+EOF
 WORKDIR /usr/src/lazymc
 ARG LAZYMC_VERSION
 ENV LAZYMC_VERSION=$LAZYMC_VERSION
 RUN git clone --branch v$LAZYMC_VERSION https://github.com/timvisee/lazymc .
-RUN cargo build --target $RUST_ARCH --release --locked
+RUN "$(< /tmp/lazymc-build-command)" build --target $RUST_ARCH --release --locked
 RUN mv /usr/src/lazymc/target/$RUST_ARCH /usr/src/lazymc/target/output_final
 
 # build lazymc-legacy
