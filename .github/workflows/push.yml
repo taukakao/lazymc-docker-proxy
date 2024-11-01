@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - main
+      - try_matrix
   pull_request:
 env:
   REGISTRY: ghcr.io
@@ -11,6 +12,33 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
+  build:
+    name: Build without pushing
+    runs-on: ${{ matrix.os }}
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            arch: amd64
+          - os: ubuntu-latest-arm
+            arch: arm64
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: docker
+        uses: ./.github/actions/docker
+        with:
+          publish: true
+          
   find-tests:
     name: Find Tests
     runs-on: ubuntu-latest
