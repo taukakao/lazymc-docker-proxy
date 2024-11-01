@@ -26,7 +26,7 @@ WORKDIR /usr/src/lazymc
 ARG LAZYMC_VERSION
 ENV LAZYMC_VERSION=$LAZYMC_VERSION
 RUN git clone --branch v$LAZYMC_VERSION https://github.com/timvisee/lazymc .
-RUN "$(< /tmp/lazymc-build-command)" build --target $RUST_ARCH --release --locked
+RUN "$(cat /tmp/lazymc-build-command)" build --target $RUST_ARCH --release --locked
 RUN mv /usr/src/lazymc/target/$RUST_ARCH /usr/src/lazymc/target/output_final
 
 # build lazymc-legacy
