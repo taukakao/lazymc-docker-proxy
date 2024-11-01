@@ -19,17 +19,18 @@ runs:
         username: ${{ github.actor }}
         password: ${{ env.GITHUB_TOKEN }}
 
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@v5
-      with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
     - name: Determine architecture
       id: arch
       shell: bash
       run: |
         echo "RUNNER_ARCH=$(uname -m)" >> "$GITHUB_OUTPUT"
+
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: type=raw,${{ steps.arch.outputs.RUNNER_ARCH }}
 
     - name: Build and push Docker image
       id: push
@@ -37,7 +38,7 @@ runs:
       with:
         context: .
         push: ${{ inputs.publish }}
-        tags: ${{ steps.arch.outputs.RUNNER_ARCH }}
+        tags: ${{ steps.meta.outputs.tags }}
 
     - name: Generate artifact attestation
       uses: actions/attest-build-provenance@v1
