@@ -27,6 +27,7 @@ runs:
 
     - name: Determine architecture
       id: arch
+      shell: bash
       run: |
         echo "RUNNER_ARCH=$(uname -m)" >> "$GITHUB_OUTPUT"
 
