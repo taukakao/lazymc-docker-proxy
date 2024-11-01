@@ -11,12 +11,6 @@ runs:
   steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v3
-      
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
       
     - name: Log in to the Container registry
       uses: docker/login-action@v3
@@ -31,14 +25,18 @@ runs:
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
+    - name: Determine architecture
+      id: arch
+      run: |
+        echo "RUNNER_ARCH=$(uname -m)" >> "$GITHUB_OUTPUT"
+
     - name: Build and push Docker image
       id: push
       uses: docker/build-push-action@v6
       with:
         context: .
-        platforms: linux/amd64,linux/arm64
         push: ${{ inputs.publish }}
-        tags: ${{ steps.meta.outputs.tags }}
+        tags: ${{ steps.arch.outputs.RUNNER_ARCH }}
 
     - name: Generate artifact attestation
       uses: actions/attest-build-provenance@v1
