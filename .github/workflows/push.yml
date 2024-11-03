@@ -25,7 +25,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cargo
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sudo sh
-          rustup target add $RUST_ARCH
+          rustup -y target add $RUST_ARCH
 
       - name: Install dependencies
         run: |
