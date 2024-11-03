@@ -23,8 +23,7 @@ jobs:
       - name: Install rustup
         run: |
           sudo apt-get update
-          sudo apt search rustup
-          sudo apt-get install -y rustup
+          sudo apt-get install -y rust
           rustup target add $RUST_ARCH
 
       - name: Install dependencies
