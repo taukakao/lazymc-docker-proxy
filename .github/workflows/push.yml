@@ -12,8 +12,42 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  build:
-    name: Build And Push
+  build-rust:
+    name: Build Rust
+    runs-on: ubuntu-latest
+    env:
+      LAZYMC_VERSION: 0.2.11
+      RUST_ARCH: x86_64-unknown-linux-musl
+    
+    steps:
+      - name: Install rustup
+        run: |
+          apt update
+          apt install -y rustup
+          rustup target add $RUST_ARCH
+
+      - name: Install dependencies
+        run: |
+          update-ca-certificates
+          apt-get update
+          apt-get install -y pkg-config libssl-dev musl-tools musl-dev
+
+      - name: Use cargo
+        run: echo cargo > /tmp/lazymc-build-command
+
+      - name: Download lazymc
+        run: |
+          mkdir -p /usr/src/lazymc
+          cd /usr/src/lazymc
+          git clone --branch v$LAZYMC_VERSION https://github.com/timvisee/lazymc .
+
+      - name: Build 
+        run: |
+          "$(cat /tmp/lazymc-build-command)" build --target $RUST_ARCH --release --locked
+          
+  
+  build-image:
+    name: Build And Push Image
     runs-on: ubuntu-latest
     env:
       REGISTRY: ghcr.io
@@ -29,10 +63,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: docker
-        uses: ./.github/actions/docker
-        with:
-          publish: false
+      #- name: docker
+      #  uses: ./.github/actions/docker
+      #  with:
+      #    publish: false
           
   find-tests:
     name: Find Tests
