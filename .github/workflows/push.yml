@@ -23,8 +23,8 @@ jobs:
       - name: Install rustup
         run: |
           sudo apt-get update
-          sudo apt search rust
-          sudo apt-get install -y rust
+          sudo apt-get install -y cargo
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sudo sh
           rustup target add $RUST_ARCH
 
       - name: Install dependencies
