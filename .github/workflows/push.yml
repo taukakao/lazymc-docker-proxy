@@ -11,6 +11,28 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
+  build:
+    name: Build And Push
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: docker
+        uses: ./.github/actions/docker
+        with:
+          publish: false
+          
   find-tests:
     name: Find Tests
     runs-on: ubuntu-latest
