@@ -16,9 +16,9 @@ ARG LAZYMC_VERSION
 ENV LAZYMC_VERSION=$LAZYMC_VERSION
 RUN git clone --branch v$LAZYMC_VERSION https://github.com/timvisee/lazymc .
 RUN <<EOF
-  mkdir -p ./.cargo/
-  echo [target.aarch64-unknown-linux-musl] >> ./.cargo/config.toml
-  echo linker = \"aarch64-linux-gnu-gcc\" >> ./.cargo/config.toml
+  mkdir -p /.cargo/
+  echo [target.aarch64-unknown-linux-musl] >> /.cargo/config.toml
+  echo linker = \"aarch64-linux-gnu-gcc\" >> /.cargo/config.toml
 EOF
 RUN cargo build --target $RUST_ARCH --release --locked
 RUN mv /usr/src/lazymc/target/$RUST_ARCH /usr/src/lazymc/target/output_final
@@ -37,9 +37,9 @@ ARG LAZYMC_LEGACY_VERSION
 ENV LAZYMC_LEGACY_VERSION=$LAZYMC_LEGACY_VERSION
 RUN git clone --branch v$LAZYMC_LEGACY_VERSION https://github.com/timvisee/lazymc .
 RUN <<EOF
-  mkdir -p ./.cargo/
-  echo [target.aarch64-unknown-linux-musl] >> ./.cargo/config.toml
-  echo linker = \"aarch64-linux-gnu-gcc\" >> ./.cargo/config.toml
+  mkdir -p /.cargo/
+  echo [target.aarch64-unknown-linux-musl] >> /.cargo/config.toml
+  echo linker = \"aarch64-linux-gnu-gcc\" >> /.cargo/config.toml
 EOF
 RUN cargo build --target $RUST_ARCH --release --locked
 RUN mv /usr/src/lazymc/target/$RUST_ARCH /usr/src/lazymc/target/output_final
@@ -57,9 +57,9 @@ WORKDIR /usr/src/lazymc-docker-proxy
 COPY Cargo.toml Cargo.lock ./
 COPY src ./src
 RUN <<EOF
-  mkdir -p ./.cargo/
-  echo [target.aarch64-unknown-linux-musl] >> ./.cargo/config.toml
-  echo linker = \"aarch64-linux-gnu-gcc\" >> ./.cargo/config.toml
+  mkdir -p /.cargo/
+  echo [target.aarch64-unknown-linux-musl] >> /.cargo/config.toml
+  echo linker = \"aarch64-linux-gnu-gcc\" >> /.cargo/config.toml
 EOF
 RUN cargo build --target $RUST_ARCH --release --locked
 RUN mv /usr/src/lazymc-docker-proxy/target/$RUST_ARCH /usr/src/lazymc-docker-proxy/target/output_final
