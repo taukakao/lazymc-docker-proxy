@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - main
+      - try_simplifying
   pull_request:
 env:
   REGISTRY: ghcr.io
